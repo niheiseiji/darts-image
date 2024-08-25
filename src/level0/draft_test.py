@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 画像の読み込み
-image_path = "test.jpg"  # 画像ファイルのパスを指定
+image_path = "draft_test.jpg"  # 画像ファイルのパスを指定
 image = cv2.imread(image_path)
 
 # 画像の表示
