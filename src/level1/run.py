@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 次に、その四角形の中に赤いドットが含まれているかどうかをHSV色空間で検出します。
 """
 
-
 def detect_red_dot(image_path):
     """
     黒い四角の中に赤いドットがあるか判定します
