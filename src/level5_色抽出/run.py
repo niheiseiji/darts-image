@@ -13,7 +13,6 @@ image = cv2.imread(image_path)
 # 画像をBGRからHSVに変換
 image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-
 # 元画像の色を抽出して背景画像を緑に設定する
 def extract_color_range(image_hsv, lower_black, upper_black, background_hsv=[0, 0, 0]):
     # 指定色を抽出
