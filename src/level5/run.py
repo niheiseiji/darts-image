@@ -5,9 +5,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 # 画像の読み込み
-# image_path = "./img/shomen.png"  # 読み込むPNG画像のパス
+image_path = "./img/shomen.png"  # 読み込むPNG画像のパス
 # image_path = "./img/naname.png"  # 読み込むPNG画像のパス
-image_path = "./img/toonaname.png"  # 読み込むPNG画像のパス
+# image_path = "./img/toonaname.png"  # 読み込むPNG画像のパス
 image = cv2.imread(image_path)
 
 # 画像をBGRからHSVに変換
@@ -28,7 +28,6 @@ def extract_color_range(image_hsv, lower_black, upper_black, background_hsv=[0, 
 
     return result_with_bg
 
-
 # 色の範囲を指定して色ごとに抽出（HSV値で指定）
 # 色相は0~180
 # 彩度明度は0~255
@@ -48,8 +47,8 @@ lower_black = np.array([0, 0, 0])
 upper_black = np.array([180, 255, 80])
 
 # ベージュの範囲（HSV空間）
-lower_beige = np.array([10, 30, 100])
-upper_beige = np.array([30, 150, 255])
+lower_beige = np.array([10, 15, 100])
+upper_beige = np.array([35, 150, 255])
 
 # 色ごとに抽出（赤は2つの範囲があるので結合）
 red_mask1 = extract_color_range(image_hsv, lower_red1, upper_red1)
