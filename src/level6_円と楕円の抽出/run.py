@@ -10,20 +10,6 @@ image = cv2.imread(image_path)
 # 画像をBGRからHSVに変換
 image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-# 元画像の色を抽出して背景画像を設定する関数
-def extract_color_range(image_hsv, lower_bound, upper_bound, background_hsv=[0, 0, 0]):
-    # 指定色を抽出
-    mask = cv2.inRange(image_hsv, lower_bound, upper_bound)
-
-    # 元画像の指定色を抽出
-    result = cv2.bitwise_and(image_hsv, image_hsv, mask=mask)
-
-    # 背景色を設定
-    color_background = np.full_like(image_hsv, background_hsv, dtype=np.uint8)
-    result_with_bg = np.where(result == 0, color_background, result)
-
-    return result_with_bg
-
 # 赤の範囲（HSV空間）
 lower_red1 = np.array([0, 80, 122])
 upper_red1 = np.array([25, 255, 255])
@@ -31,52 +17,32 @@ lower_red2 = np.array([160, 70, 100])
 upper_red2 = np.array([180, 255, 255])
 
 # 赤色の抽出（赤は2つの範囲があるので結合）
-red_mask1 = extract_color_range(image_hsv, lower_red1, upper_red1)
-red_mask2 = extract_color_range(image_hsv, lower_red2, upper_red2)
-red_extracted = cv2.addWeighted(red_mask1, 1.0, red_mask2, 1.0, 0.0)
+mask1 = cv2.inRange(image_hsv, lower_red1, upper_red1)
+mask2 = cv2.inRange(image_hsv, lower_red2, upper_red2)
+red_extracted = cv2.addWeighted(mask1, 1.0, mask2, 1.0, 0.0)
 
-# 赤色抽出結果をグレースケールに変換
-red_extracted_gray = cv2.cvtColor(cv2.cvtColor(red_extracted, cv2.COLOR_HSV2BGR), cv2.COLOR_BGR2GRAY)
+# 輪郭の検出（マスク画像のまま使用）
+contours, _ = cv2.findContours(red_extracted, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-# --- ハフ変換で円検出 ---
-# グレースケール画像でガウシアンブラーを適用
-blurred = cv2.GaussianBlur(red_extracted_gray, (9, 9), 2)
+# 楕円を描画するために、グレースケール画像をカラーに変換
+output_image = cv2.cvtColor(red_extracted, cv2.COLOR_GRAY2BGR)
 
-# グレースケール画像をカラーに変換（円の描画用）
-blurred_color = cv2.cvtColor(blurred, cv2.COLOR_GRAY2BGR)
-
-# ハフ変換で円を検出
-circles = cv2.HoughCircles(
-    blurred,
-    cv2.HOUGH_GRADIENT,
-    dp=1.2,  # 検出精度のスケール (解像度比率)
-    minDist=1000,  # 円の中心間の最小距離
-    param1=100,  # Cannyエッジ検出用の上限閾値
-    param2=30,  # 円検出の閾値（大きいほど厳密）
-    minRadius=700,  # 検出する円の最小半径
-    maxRadius=1500,  # 検出する円の最大半径
-)
-
-# 円検出された場合、カラー化されたグレースケール画像に円を描画
-if circles is not None:
-    circles = np.round(circles[0, :]).astype("int")
-    for x, y, r in circles:
-        # 円を描画（緑色）
-        cv2.circle(blurred_color, (x, y), r, (0, 255, 0), 4)
-        cv2.rectangle(
-            blurred_color, (x - 5, y - 5), (x + 5, y + 5), (0, 255, 0), -1
-        )  # 中心点を描画
+# 輪郭をフィルタリングして楕円を描画
+min_area = 3000000  # 調整可能: 小さな輪郭を無視するための最小面積
+max_area = 4000000  # 調整可能: 大きな輪郭を無視するための最大面積
+for contour in contours:
+    if len(contour) >= 5 and cv2.contourArea(contour) > min_area and cv2.contourArea(contour) < max_area:
+        print(cv2.contourArea(contour))
+        # 楕円をフィット
+        ellipse = cv2.fitEllipse(contour)
+        # 楕円を緑色で描画
+        cv2.ellipse(output_image, ellipse, (0, 255, 0), 2)
 
 # 結果を表示
-plt.figure(figsize=(20, 15))
-
-# グレースケール画像に円検出結果を表示
-plt.subplot(2, 2, 1)
-plt.imshow(cv2.cvtColor(blurred_color, cv2.COLOR_BGR2RGB))
-plt.title("Grayscale with Circles")
+plt.figure(figsize=(12, 8))
+plt.imshow(cv2.cvtColor(output_image, cv2.COLOR_BGR2RGB))
+plt.title("Ellipse Fitting on Extracted Red Segments")
 plt.axis("off")
-
 plt.show()
-
 
 # %%
