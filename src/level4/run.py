@@ -5,10 +5,22 @@ from matplotlib import pyplot as plt
 
 from util.jpg2png import convert_jpg_to_png
 
+# RGBで処理すると照明の当たり方で色抽出がうまくいかない。次のレベルではHSVで処理する
+
 # 画像を読み込む
 # image_path = convert_jpg_to_png("./img/board_light.jpg")
-image_path = "./img/board_light.png"
+# image_path = convert_jpg_to_png("./img/shomen.jpg")
+# image_path = convert_jpg_to_png("./img/naname.jpg")
+# image_path = convert_jpg_to_png("./img/toonaname.jpg")
+image_path = "./img/shomen.png"
+# image_path = "./img/board_light.png"
+# image_path = "./img/board_light.png"
 image = cv2.imread(image_path)
+# 結果を表示
+plt.subplot(1, 2, 1)
+plt.title("Original Image")
+plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+plt.axis("off")
 
 # ガウシアンブラーで表面を滑らかに
 gaussianblur_image = cv2.GaussianBlur(image, (51, 51), 0)
@@ -35,7 +47,8 @@ def extract_color_range(image, lower_bound, upper_bound, bg_color=(0, 0, 0)):
 
 # 赤をBGRで抽出する
 lower_red = np.array([0, 0, 100])
-upper_red = np.array([80, 80, 255])
+# upper_red = np.array([80, 80, 255])
+upper_red = np.array([177, 173, 255])
 red_extracted = extract_color_range(gaussianblur_image, lower_red, upper_red)
 
 # 緑をBGRで抽出する
@@ -50,8 +63,10 @@ beige_extracted = extract_color_range(gaussianblur_image, lower_beige, upper_bei
 
 # 黒をBGRで抽出する(精度悪いかつ調整不可)
 lower_black = np.array([0, 0, 0])
-upper_black = np.array([92, 101,107])
-black_extracted = extract_color_range(gaussianblur_image, lower_black, upper_black, bg_color=(255, 255, 255))  # 白背景
+upper_black = np.array([92, 101, 107])
+black_extracted = extract_color_range(
+    gaussianblur_image, lower_black, upper_black, bg_color=(255, 255, 255)
+)  # 白背景
 
 # 結果を表示
 plt.figure(figsize=(12, 8))
