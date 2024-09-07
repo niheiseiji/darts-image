@@ -32,6 +32,10 @@ _, thresh = cv2.threshold(diff_image, 40, 255, cv2.THRESH_BINARY)
 kernel = np.ones((5, 5), np.uint8)
 cleaned_diff = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
 
+# 差分画像を保存（処理結果）
+output_path = "./img/output/cleaned_diff.png"  # 保存するファイルパス
+cv2.imwrite(output_path, cleaned_diff)
+
 # 結果を表示
 plt.figure(figsize=(12, 8))
 
