@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-
 def connect_broken_parts(image, kernel_size=(7, 7), iterations=2):
     """
     途切れた物体を一つの物体として扱うために膨張と収縮を行う処理
