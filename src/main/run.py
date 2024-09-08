@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
+from get_score import get_score
 from mark_extractor import extract_blue_marks  # ここで別ファイルの関数をインポート
 from diff_detector import detect_dart_diff  # 差分検出用
 from connect_parts import connect_parts # 膨張処理
@@ -24,13 +25,13 @@ output_points = np.array([[250, 0], [500, 250], [250, 500], [0, 250]], dtype="fl
 # 射影変換行列を取得
 matrix = cv2.getPerspectiveTransform(np.array(sorted_marks, dtype="float32"), output_points)
 
-'''
-1の検証コード
-'''
 # 射影変換を適用して、500x500の画像に変換
 output_size = (500, 500)
 warped_image = cv2.warpPerspective(init_image, matrix, output_size)
 
+'''
+1の検証コード
+'''
 # 結果の保存
 output_path = "./img/output/warped_image.png"
 cv2.imwrite(output_path, warped_image)
@@ -121,6 +122,7 @@ for i, bottom in enumerate(bottom_coords):
     # 変換後の座標を整数に変換
     x, y = int(dst_point[0][0][0]), int(dst_point[0][0][1])
 
+    print(x,y)
     # 青い点を描画
     cv2.circle(warped_image, (x, y), 4, (0, 255, 0), -1)
 
@@ -130,13 +132,22 @@ cv2.imwrite(output_path, warped_image)
 
 plt.figure(figsize=(6, 6))
 plt.imshow(cv2.cvtColor(warped_image, cv2.COLOR_BGR2RGB))
-plt.ylabel("y")
-plt.xlabel("x")
+# X軸とY軸にメモリを設定
+plt.xticks(np.arange(0, warped_image.shape[1], step=10))  # 50ピクセルごとにX軸のメモリ
+plt.yticks(np.arange(0, warped_image.shape[0], step=10))  # 50ピクセルごとにY軸のメモリ
 plt.title("Warped Image with Dart Locations")
-plt.axis("off")
+plt.axis("on")
+plt.grid(True)
 plt.show()
 '''
 4の検証コード 終わり
 '''
+
+'''
+5.(x,y)から得点計算
+'''
+# 座標 (x, y) を入力して得点を計算
+score = get_score(x, y)
+print(f"Dart at ({x}, {y}) scores: {score} points")
 
 # %%
