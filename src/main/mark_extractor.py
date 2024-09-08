@@ -1,6 +1,7 @@
+# %%
 import cv2
 import numpy as np
-
+from matplotlib import pyplot as plt
 
 def extract_blue_marks(image_path):
     # 画像の読み込み
@@ -8,7 +9,7 @@ def extract_blue_marks(image_path):
     image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     # 青の範囲（HSV空間）
-    lower_blue = np.array([90, 100, 100])
+    lower_blue = np.array([100, 100, 100])
     upper_blue = np.array([125, 255, 255])
 
     # 青を抽出
@@ -53,4 +54,6 @@ def extract_blue_marks(image_path):
     )  # 下側2点（X座標で右→左に並べる）
 
     # 上右下左の順にした座標リストを返す
-    return [top_marks[0], top_marks[1], bottom_marks[0], bottom_marks[1]]
+    return [top_marks[0], top_marks[1], bottom_marks[0], bottom_marks[1]], blue_extracted
+
+# %%

@@ -4,7 +4,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 # 画像の読み込み
-image_path = "./img/marktuki.png"  # 読み込むPNG画像のパス
+# image_path = "./img/marktuki.png"  # 読み込むPNG画像のパス
+image_path = "./img/init.png"  # 読み込むPNG画像のパス
 image = cv2.imread(image_path)
 
 # 画像をBGRからHSVに変換
@@ -25,7 +26,7 @@ def extract_color_range(image_hsv, lower_color, upper_color, background_hsv=[0, 
     return result_with_bg
 
 # 青の範囲（HSV空間）
-lower_blue = np.array([90, 100, 100])
+lower_blue = np.array([100, 100, 100])
 upper_blue = np.array([125, 255, 255])
 
 # 青を抽出
@@ -67,7 +68,7 @@ bottom_marks = sorted(blue_mark_centers[2:], key=lambda p: p[0], reverse=True)  
 sorted_marks = [top_marks[0], top_marks[1], bottom_marks[0], bottom_marks[1]]
 
 # 結果の保存
-output_path = "./img/output/mark_image.png"
+output_path = "./img/output/mark_image2.png"
 cv2.imwrite(output_path, image)
 
 # 結果の表示
