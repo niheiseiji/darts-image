@@ -4,7 +4,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 # 画像の読み込み
-image_path = "./img/shomen.png"  # 読み込むPNG画像のパス
+# image_path = "./img/shomen.png"  # 読み込むPNG画像のパス
+image_path = "./img/toonaname.png"  # 読み込むPNG画像のパス
 image = cv2.imread(image_path)
 
 # 画像をBGRからHSVに変換
@@ -28,8 +29,8 @@ contours, _ = cv2.findContours(red_extracted, cv2.RETR_TREE, cv2.CHAIN_APPROX_SI
 output_image = cv2.cvtColor(red_extracted, cv2.COLOR_GRAY2BGR)
 
 # 輪郭をフィルタリングして楕円を描画
-min_area = 3000000  # 調整可能: 小さな輪郭を無視するための最小面積
-max_area = 4000000  # 調整可能: 大きな輪郭を無視するための最大面積
+min_area = 2000000  # 調整可能: 小さな輪郭を無視するための最小面積
+max_area = 3000000  # 調整可能: 大きな輪郭を無視するための最大面積
 for contour in contours:
     if len(contour) >= 5 and cv2.contourArea(contour) > min_area and cv2.contourArea(contour) < max_area:
         print(cv2.contourArea(contour))
@@ -37,6 +38,10 @@ for contour in contours:
         ellipse = cv2.fitEllipse(contour)
         # 楕円を緑色で描画
         cv2.ellipse(output_image, ellipse, (0, 255, 0), 2)
+
+# 結果の保存
+output_path = "./img/output/detected_image.png"
+cv2.imwrite(output_path, output_image)
 
 # 結果を表示
 plt.figure(figsize=(12, 8))
