@@ -5,14 +5,15 @@ from matplotlib import pyplot as plt
 
 # 画像の読み込み
 # image_path = "./img/shomen.png"  # 読み込むPNG画像のパス
-image_path = "./img/toonaname.png"  # 読み込むPNG画像のパス
+# image_path = "./img/toonaname.png"  # 読み込むPNG画像のパス
+image_path = "./img/marktuki.png"  # 読み込むPNG画像のパス
 image = cv2.imread(image_path)
 
 # 画像をBGRからHSVに変換
 image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
 # 赤の範囲（HSV空間）
-lower_red1 = np.array([0, 80, 122])
+lower_red1 = np.array([0, 80, 90])
 upper_red1 = np.array([25, 255, 255])
 lower_red2 = np.array([160, 70, 100])
 upper_red2 = np.array([180, 255, 255])
@@ -37,7 +38,7 @@ for contour in contours:
         # 楕円をフィット
         ellipse = cv2.fitEllipse(contour)
         # 楕円を緑色で描画
-        cv2.ellipse(output_image, ellipse, (0, 255, 0), 2)
+        cv2.ellipse(output_image, ellipse, (0, 255, 0), 5)
 
 # 結果の保存
 output_path = "./img/output/detected_image.png"
