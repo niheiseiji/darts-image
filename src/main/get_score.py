@@ -2,7 +2,6 @@
 import math
 
 # ダーツボードのセクター（1-20の順序）
-# sector_values = [6, 13, 4, 18, 1, 20, 5, 12, 9, 14, 11, 8, 16, 7, 19, 3, 17, 2, 15, 10]
 sector_values = [6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20, 1, 18, 4, 13]
 
 # ダーツボードの各エリアの半径 (mm)
@@ -20,7 +19,6 @@ image_center_y = 250
 
 # 実際のボード半径 (225.5mm) を画像の250ピクセルに対応させる
 scale_factor = 250 / board_edge_radius  # 実寸(mm)からピクセルへの変換比率
-
 
 def get_score(x, y):
     """
@@ -66,7 +64,6 @@ def get_score(x, y):
     # シングルエリア
     print("single")
     return score
-
 
 # %%
 # 検証
