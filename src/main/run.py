@@ -5,9 +5,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from get_score import get_score
-from mark_extractor import extract_blue_marks  # ここで別ファイルの関数をインポート
-from diff_detector import detect_dart_diff  # 差分検出用
-from connect_parts import connect_parts  # 膨張処理
+from mark_extractor import extract_blue_marks
+from diff_detector import detect_dart_diff
+from connect_parts import connect_parts
 from detect_contour_bottom import detect_contour_bottom
 
 """
@@ -85,6 +85,7 @@ for i, bottom in enumerate(bottom_coords):
 score = get_score(x, y)
 print(f"Dart at ({x}, {y}) scores: {score} points")
 # %%
+
 
 # 以下検証コード
 """
